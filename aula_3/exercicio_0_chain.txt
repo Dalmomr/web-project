@@ -1,0 +1,5 @@
+{
+TTree *tree2 = new TTree("myTree", "Tree Title");
+meu l;
+l.Loop(tree1);
+}
