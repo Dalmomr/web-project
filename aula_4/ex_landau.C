@@ -1,0 +1,48 @@
+  {
+  // Definindo variável e parâmetros da Landau
+    RooRealVar x("x", "x", -10, 10);
+    RooRealVar mean("mean", "mean", 0, -10, 10);
+    RooRealVar sigma("sigma", "sigma", 1, 0.1, 10);
+
+    // Criando a PDF Landau
+    RooLandau landau("landau", "Landau PDF", x, mean, sigma);
+
+    // Gerando toy data
+    RooDataSet *data = landau.generate(x, 1000);
+
+    // Ajustando os dados
+    RooFitResult *result = landau.fitTo(*data, RooFit::Save(true));
+
+    // Criando o frame para o plot
+    RooPlot *frame = x.frame(RooFit::Title("Landau Fit"));
+
+    // Plotando os dados
+    data->plotOn(frame);
+
+    // Plotando a PDF ajustada
+    landau.plotOn(frame);
+
+    // Criando a canvas para o plot
+    TCanvas *canvas = new TCanvas("canvas", "Landau Fit", 800, 600);
+
+    // Adicionando a caixa de informação estatística para os dados e o modelo
+
+
+	
+    TPaveText *statistics = new TPaveText(0.6, 0.6, 0.9, 0.9, "NDC");
+    statistics->SetFillColor(0);
+    statistics->AddText(Form("Data Statistics:"));
+    statistics->AddText(Form("Entries: %d", data->numEntries()));
+    statistics->AddText(Form(""));
+    statistics->AddText(Form("Model Statistics:"));
+    statistics->AddText(Form("Chi2/NdF: %.2f", frame->chiSquare()));
+    statistics->AddText(Form("Mean: %.2f", mean.getVal()));
+    statistics->AddText(Form("Sigma: %.2f", sigma.getVal()));
+    statistics->Draw();
+
+    // Desenhando o frame
+    frame->Draw();
+
+    // Desenhando a canvas
+    canvas->Draw();
+	}
